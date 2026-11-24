@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>Hydroplaning: When Water Lifts a Tire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6f3;--surface:#ffffff;--surface2:#edf2ee;--ink:#16201b;--muted:#54635a;--line:#d5ddd6;--accent:#0b6e5d;--accent-soft:#dff3ee;--orange:#c25e1a;--warn:#7a5200;--warnbg:#fff3cf;--danger:#9b1c1c;--dangerbg:#fde8e8;--ok:#14532d;--okbg:#e2f3e7;--code:#edf2ee;--water:#2f7fc4;--shadow:0 10px 30px rgba(20,40,30,.08)}
+@media(prefers-color-scheme:dark){:root{--bg:#101413;--surface:#191f1c;--surface2:#222925;--ink:#e9efeb;--muted:#a9b6ad;--line:#333d37;--accent:#4cc2b0;--accent-soft:#173b35;--orange:#e8935a;--warnbg:#3a2f0a;--dangerbg:#3a1414;--okbg:#14301e;--code:#222925;--shadow:none}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+a{color:var(--accent)}h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.12}h1{font-size:clamp(2.3rem,6vw,3.9rem);font-weight:900;margin:.15em 0 .3em}h2{font-size:clamp(1.7rem,4vw,2.4rem);margin:0 0 .45em}h3{font-size:1.22rem;margin:1.5em 0 .4em}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 64px}
+nav{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:6px;flex-wrap:wrap}
+nav a{color:var(--ink);text-decoration:none;font-weight:600;font-size:.9rem;padding:8px 12px;border-radius:999px;min-height:36px;display:inline-flex;align-items:center}nav a:hover{background:var(--surface2)}
+.hero{padding:38px 0 10px}.kicker{font-weight:800;letter-spacing:.09em;text-transform:uppercase;font-size:.76rem;color:var(--accent)}
+.lede{font-size:1.16rem;color:var(--muted);max-width:760px}
+.keynum{display:flex;gap:18px;align-items:center;background:var(--accent-soft);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:20px 0}
+.keynum .big{font-family:"JetBrains Mono",monospace;font-size:clamp(2rem,5vw,3rem);font-weight:700;color:var(--accent);white-space:nowrap}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;margin:18px 0;box-shadow:var(--shadow)}
+section{padding-top:30px}
+.eq{font-family:"JetBrains Mono",monospace;background:var(--code);border-radius:10px;padding:14px 16px;margin:12px 0;overflow-x:auto;font-size:.94rem}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.93rem}th,td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}th{font-weight:700}
+.note{border-left:4px solid var(--accent);background:var(--surface2);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+.warnbox{background:var(--warnbg);border:1px solid #e0c56a;border-radius:10px;padding:12px 16px;margin:12px 0;color:var(--ink)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:700px){.grid{grid-template-columns:1fr}}
+label{font-weight:600;font-size:.92rem;display:block;margin-top:16px}label span.val{font-family:"JetBrains Mono",monospace;color:var(--accent);float:right;font-weight:700}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:10px;border-radius:999px;background:var(--line);outline:none;margin:10px 0 4px;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:28px;height:28px;border-radius:50%;background:var(--surface);border:3px solid var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:grab}
+input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--surface);border:3px solid var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:grab}
+.seg{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.seg button{flex:1;min-height:44px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;font-weight:600;cursor:pointer;padding:10px;transition:background .2s,color .2s}.seg button[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.out{font-family:"JetBrains Mono",monospace;font-size:1.15rem;font-weight:700}.outlabel{font-size:.78rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.small{font-size:.9rem;color:var(--muted)}svg{max-width:100%;height:auto}
+details{border:1px solid var(--line);border-radius:10px;padding:6px 16px;margin:12px 0;background:var(--surface)}summary{cursor:pointer;font-weight:700;padding:10px 0;min-height:36px}
+blockquote{background:var(--surface2);border-radius:10px;padding:14px 18px;margin:12px 0;font-size:.95rem}
+footer{color:var(--muted);font-size:.88rem;border-top:1px solid var(--line);margin-top:40px;padding-top:18px}
+/* Calculator layout: 2x2 quadrant grid — controls | numbers / chart | visual. No sticky positioning: a sticky column taller than the viewport hid the chart bottom and the visual. */
+.quad-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:stretch}
+.quad{min-width:0;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--surface)}
+.quad-chart .chart-box{margin-top:0;padding-bottom:4px}
+.quad-viz{display:flex}
+.quad-viz .viz{flex:1;display:flex;flex-direction:column;margin:0;width:100%}
+.quad-viz .viz svg{flex:none;width:100%;height:auto;max-height:200px;margin:auto 0;display:block}
+.calc-extra{margin-top:16px}
+#treadWarn{margin:10px 0 0}
+@media(max-width:820px){.quad-grid{grid-template-columns:1fr}.quad-viz .viz svg{max-height:190px}}
+.bigouts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+@media(max-width:480px){.bigouts{grid-template-columns:1fr 1fr}}
+.bigout{background:var(--surface2);border-radius:14px;padding:14px 16px}
+.bigout .num{font-family:"JetBrains Mono",monospace;font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:700;line-height:1.15;transition:color .25s}
+.bigout .cap{font-size:.78rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.status-pill{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:1rem;padding:10px 18px;border-radius:999px;margin:6px 0 4px;transition:background .3s,color .3s}
+.status-pill::before{content:"";width:11px;height:11px;border-radius:50%;background:currentColor;flex:none}
+.status-pill.ok{background:var(--okbg);color:var(--ok)}.status-pill.near{background:var(--warnbg);color:var(--warn)}.status-pill.over{background:var(--dangerbg);color:var(--danger)}
+@media(prefers-color-scheme:dark){.status-pill.ok{color:#86efac}.status-pill.near{color:#fde68a}.status-pill.over{color:#fca5a5}}
+.status-detail{font-size:.92rem;color:var(--muted);margin:4px 0 8px}
+.viz{background:linear-gradient(180deg,var(--surface2),var(--surface));border:1px solid var(--line);border-radius:14px;padding:10px 12px 4px;margin:12px 0}
+.viz .viz-cap{font-size:.82rem;color:var(--muted);font-weight:600;margin:2px 2px 6px}
+#vizTyre{transition:transform .45s ease}
+#vizWater{transition:all .45s ease}
+#vizWedge{transition:all .45s ease}
+.chart-box{margin-top:10px}
+.chart-title{font-size:1.05rem;margin:0 0 2px;font-family:Inter,system-ui,sans-serif;font-weight:800;line-height:1.3}
+.chart-explain{font-size:.9rem;color:var(--muted);margin:0 0 6px}
+.chart-note{font-size:.88rem;margin:6px 0 0;color:var(--muted)}
+.chart-warn{margin:8px 0 0}
+#chart{width:100%;height:auto;display:block}
+.takeaway{font-size:.93rem;background:var(--accent-soft);border-radius:8px;padding:8px 12px;margin:8px 0 10px}
+.takeaway strong{color:var(--accent)}
+#calculator{padding-top:2px}
+#calculator h2{font-size:1.5rem;margin-bottom:.1em}
+#calculator .card{margin-top:4px;padding:8px}
+.calc-intro{font-size:.84rem;line-height:1.4;margin:0 0 4px}
+.ctrl-line{font-size:.8rem;line-height:1.3;margin:3px 0 0;background:var(--surface2);border-radius:8px;padding:5px 8px}
+#calculator label{margin-top:3px;font-size:.86rem;line-height:1.25}
+#calculator input[type=range]{height:6px;margin:3px 0 1px}
+#calculator input[type=range]::-webkit-slider-thumb{width:22px;height:22px;border-width:2px}
+#calculator input[type=range]::-moz-range-thumb{width:20px;height:20px;border-width:2px}
+#calculator .seg{margin:3px 0;gap:6px}
+#calculator .seg button{min-height:28px;padding:3px 6px;font-size:.84rem;border-radius:8px}
+#calculator .quad-controls .small{margin:4px 0 0}
+.num-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.num-head .status-detail{flex:1 1 180px}
+#calculator .bigouts{gap:5px;margin:5px 0}
+#calculator .bigout{padding:5px 8px;border-radius:10px}
+#calculator .bigout .cap{font-size:.66rem;line-height:1.2}
+#calculator .bigout .num{font-size:clamp(1.35rem,2.4vw,1.65rem);line-height:1.05}
+#calculator .bigout .small{font-size:.76rem;line-height:1.25}
+#calculator .status-pill{padding:4px 12px;font-size:.92rem;margin:0}
+#calculator .status-detail{margin:0;font-size:.8rem;line-height:1.3}
+#calculator .ctrl-line{margin-top:3px}
+#calculator #treadWarn{margin:5px 0 0;padding:6px 9px;font-size:.82rem;line-height:1.35}
+#calculator .chart-title{font-size:.92rem;line-height:1.25}
+#calculator .chart-explain{font-size:.8rem;line-height:1.35;margin-bottom:0}
+#calculator .chart-note{font-size:.8rem;line-height:1.35;margin-top:3px}
+#calculator .chart-warn{margin-top:4px;padding:6px 9px;font-size:.82rem;line-height:1.35}
+#calculator .quad .small{font-size:.8rem;line-height:1.4}
+#calculator .viz{padding:6px 8px 2px}
+#calculator .viz-cap{margin:0 2px 2px;font-size:.78rem}
+.about{font-size:.88rem;color:var(--muted)}.about h2{font-size:1.35rem;color:var(--ink)}.about table{font-size:.84rem}
+@media (prefers-reduced-motion: reduce){#vizTyre,#vizWater,#vizWedge,.bigout .num,.status-pill{transition:none}}
+</style>
+</head>
+<body>
+<nav aria-label="Sections">
+<a href="#overview">Overview</a><a href="#theory">Theory</a><a href="#calculator">Calculator</a><a href="#examples">Worked Examples</a><a href="#references">References</a><a href="#about">About this site</a>
+</nav>
+<div class="wrap">
+<header class="hero">
+<p class="kicker">A working tool for wet-road physics</p>
+<h1>Hydroplaning: when water lifts a tire</h1>
+<p class="lede">At speed on a wet road, water pressure in front of a tire can grow until it carries the tire's entire load. Contact — and with it steering and braking — is lost. This tool derives that onset speed from first principles, checks it against NASA's experiments, and lets you test it yourself with the calculator below.</p>
+</header>
+
+<div class="card" role="img" aria-label="Diagram of a tire meeting a water film: a wedge of water builds ahead of the contact patch and lifts the tire">
+<svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="205" width="760" height="10" fill="#8a94a6"/>
+<path d="M 120 205 L 430 205 L 430 188 L 180 200 Z" fill="#3b82c4" opacity="0.85"/>
+<circle cx="470" cy="125" r="82" fill="none" stroke="currentColor" stroke-width="14"/>
+<circle cx="470" cy="125" r="26" fill="none" stroke="currentColor" stroke-width="8"/>
+<path d="M 60 195 L 165 195" stroke="#3b82c4" stroke-width="4" marker-end="url(#a)"/><path d="M 90 178 L 175 182" stroke="#3b82c4" stroke-width="3" marker-end="url(#a)"/>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#3b82c4"/></marker></defs>
+<text x="30" y="165" font-size="14" fill="currentColor">Water approaches at V</text>
+<text x="205" y="175" font-size="14" fill="currentColor">Water wedge</text>
+<text x="575" y="42" font-size="14" fill="currentColor">Tyre</text>
+<text x="20" y="245" font-size="14" fill="currentColor">Contact patch: L ≈ 0.15 m · width b = 0.205 m</text>
+</svg>
+<p class="small" style="margin:6px 0 0">Schematic, not to scale. In the tyre's frame, the road and water stream toward the tyre; the wedge slows at the leading edge and its pressure does the lifting.</p>
+</div>
+
+<section id="overview">
+<h2>Overview</h2>
+<p>It starts with a feeling every driver dreads. The road is wet, the rain is steady, and as speed builds the steering goes strangely light. The wheel turns a little and the car keeps going straight. The tyres are no longer gripping the road at all — they are skimming on top of the water, like a flat stone skipped across a pond.</p>
+<p>What is happening, in plain words, is this. A rolling tyre meets more water than it can push aside or squeeze through its tread grooves. The leftover water piles up in front of the tyre as a wedge. The faster you drive, the harder that wedge is rammed against the tyre, and the more it pushes back — upward. At some speed the upward push grows strong enough to carry the whole weight pressing that tyre onto the road. The tyre climbs onto the water, a thin layer separates rubber from pavement everywhere, and with that layer goes nearly all steering and braking force.</p>
+<p>It matters because it arrives suddenly, at ordinary highway speeds, and it removes control rather than just reducing it. A tyre on water cannot be steered and can barely be braked. It also matters because the biggest lever is unglamorous and free to check: tyre pressure. A soft, underinflated tyre is lifted at a noticeably lower speed than a correctly inflated one.</p>
+<div class="keynum"><div class="big">94 km/h</div><div><strong>The one number to remember.</strong><br>For a typical car tyre inflated to 220 kPa, experiments put the onset of this lifting at about 94 km/h — a normal motorway speed, in water only a few millimetres deep. The Theory section below shows where that number comes from, step by step, and the calculator lets you move it.</div></div>
+<p>No formulas are needed to follow that story. The rest of this page builds it properly: first the wedge, then the pressure it creates, then the balance that decides the onset speed, then what the experiments actually measured.</p>
+</section>
+
+<section id="theory">
+<h2>Theory</h2>
+<p class="small">Symbols: <strong>p<sub>t</sub></strong> tyre inflation pressure, always <strong>gauge pressure</strong> on this page (the convention for tyre pressure) · <strong>p<sub>∞</sub></strong> ambient pressure of the undisturbed water · <strong>q</strong> dynamic pressure · <strong>Q<sub>w</sub></strong> water volume flow rate to clear · <strong>ρ</strong> water density, 998 kg/m³ at 20 °C · <strong>μ</strong> dynamic viscosity, 1.002 × 10⁻³ Pa·s at 20 °C · <strong>C<sub>Lh</sub></strong> hydrodynamic lift coefficient · <strong>h</strong> water-film depth · <strong>V</strong> vehicle speed · <strong>S</strong> contact-patch area · <strong>b</strong> tyre width, 0.205 m · <strong>L<sub>patch</sub></strong> contact-patch length, 0.15 m.</p>
+
+<h3>(a) The water wedge and the contact patch</h3>
+<p class="takeaway"><strong>Takeaway:</strong> water the tyre can't clear piles up as a wedge, and that wedge is what lifts it.</p>
+<p>Work in the tyre's frame of reference: the tyre is stationary and the road, with its water film, streams toward it at speed V. The tyre touches the road over a small footprint — the contact patch, roughly 0.15 m long and as wide as the tyre (b = 0.205 m for a typical car tyre). Water that cannot escape sideways or through the tread grooves piles up ahead of that patch as a wedge. Inside the wedge the water slows down as it nears the tyre's leading edge. Slowing water down raises its pressure — and that pressure acts upward on the tread over the patch area S. As V grows, the wedge pressure grows fast, until it can support the whole wheel load and the tyre rides up onto the water.</p>
+
+<h3>(b) Bernoulli and dynamic pressure</h3>
+<p class="takeaway"><strong>Takeaway:</strong> slowing the wedge raises its pressure by q = ½ρV² — double the speed, four times the pressure.</p>
+<p><strong>Assumptions, stated once:</strong> steady, inviscid, incompressible flow along a streamline, in the tyre frame. Bernoulli's equation between a point far upstream (pressure p<sub>∞</sub>, speed V) and the stagnation point at the wedge (speed ≈ 0) gives a pressure rise equal to the dynamic pressure:</p>
+<div class="eq">p<sub>stag</sub> − p<sub>∞</sub> = q = ½ ρ V² &nbsp;&nbsp;with ρ = 998 kg/m³ at 20 °C</div>
+<table><tr><th>Speed V</th><th>Dynamic pressure q</th></tr>
+<tr><td>60 km/h</td><td>139 kPa</td></tr><tr><td>80 km/h</td><td>246 kPa</td></tr><tr><td>100 km/h</td><td>385 kPa</td></tr></table>
+<p>Note that q at highway speed is the same order of magnitude as tyre inflation pressure — that coincidence is the whole problem. Double the speed and q quadruples, because it grows with V².</p>
+
+<h3>(c) Lift and the square-root scaling</h3>
+<p class="takeaway"><strong>Takeaway:</strong> hydroplaning starts when lift pressure equals tyre pressure, so onset speed grows with √(p<sub>t</sub>) — more pressure, later onset.</p>
+<p>The hydrodynamic lift on the tyre is the wedge pressure acting over the patch, reduced by a lift coefficient:</p>
+<div class="eq">L = q · S · C<sub>Lh</sub> &nbsp;&nbsp;·&nbsp;&nbsp; lift pressure = C<sub>Lh</sub> · q</div>
+<p>For a rolling tyre with C<sub>Lh</sub> = 0.7, the lift pressure at 100 km/h is 0.7 × 385 = <strong>269.5 kPa (about 270 kPa)</strong>. The tyre pushes down on the road with roughly its inflation pressure acting over the same area, p<sub>t</sub>·S. Hydroplaning begins when lift balances that load, i.e. when q·C<sub>Lh</sub> = p<sub>t</sub>. Substituting q = ½ρV² and solving for V:</p>
+<div class="eq">V = √( 2 p<sub>t</sub> / ( ρ C<sub>Lh</sub> ) )</div>
+<p>At p<sub>t</sub> = 220 kPa this lift-balance speed is <strong>90.3 km/h</strong> rolling (C<sub>Lh</sub> = 0.7) and <strong>77.6 km/h</strong> sliding (C<sub>Lh</sub> = 0.95).</p>
+<div class="note"><strong>Read this honestly:</strong> the √(p<sub>t</sub>) <em>scaling</em> is derived from Bernoulli. C<sub>Lh</sub> is <strong>not</strong> derived — it is an empirical fitting constant. Working backwards from NASA's measured coefficients implies C<sub>Lh</sub> ≈ 0.64 (rolling) and ≈ 0.88 (non-rotating). Literature values reported by van Es (2001), citing NASA Langley work, are ≈ 0.7 rolling and ≈ 0.95 sliding. The two sets <strong>do not agree exactly</strong>. The calculator uses the literature pair (0.7 / 0.95) for the lift-balance check and shows NASA separately, so the two can be compared rather than conflated.</div>
+
+<h3>(d) The NASA empirical formula</h3>
+<p class="takeaway"><strong>Takeaway:</strong> NASA's experiments give the same square-root rule with measured numbers — 94.3 km/h at 220 kPa for a rolling tyre.</p>
+<p>Horne's NASA Technical Note D-2056 (1963) measured onset in spin-down and tow tests and fitted, with p<sub>t</sub> in kPa as gauge pressure:</p>
+<div class="eq">V<sub>p,rolling</sub> = 6.36 √p<sub>t</sub> &nbsp;km/h &nbsp;&nbsp;·&nbsp;&nbsp; V<sub>p,non-rotating</sub> = 5.43 √p<sub>t</sub> &nbsp;km/h</div>
+<table><tr><th>Tyre pressure p<sub>t</sub></th><th>Rolling onset</th><th>Non-rotating onset</th></tr>
+<tr><td>180 kPa</td><td>85.3 km/h</td><td>72.9 km/h</td></tr>
+<tr><td>220 kPa</td><td>94.3 km/h</td><td>80.5 km/h</td></tr>
+<tr><td>240 kPa</td><td>98.5 km/h</td><td>84.1 km/h</td></tr>
+<tr><td>280 kPa</td><td>106.4 km/h</td><td>—</td></tr></table>
+<p>In the original imperial forms: 9 √p<sub>t</sub> knots and 10.35 √p<sub>t</sub> mph, with p<sub>t</sub> in psi. The 6.36 coefficient is the <strong>published SI form</strong>. The exact conversion of 9 knots is 6.35 — a difference of about <strong>0.17 km/h at 220 kPa</strong>. This page keeps the published 6.36 and says so, rather than silently changing it to 6.35.</p>
+
+<h3>(e) Rolling vs non-rotating (a locked wheel)</h3>
+<p class="takeaway"><strong>Takeaway:</strong> a locked, non-rotating wheel lifts earlier — 80.5 instead of 94.3 km/h at 220 kPa — and stays lifted.</p>
+<p>A <strong>non-rotating</strong> wheel — locked under braking, or a landing wheel not yet spun up — hydroplanes at a <em>lower</em> speed than a rolling one: 80.5 km/h instead of 94.3 km/h at 220 kPa. Worse, once a locked wheel is hydroplaning it keeps hydroplaning until speed falls by other means, because nothing spins it back up into contact.</p>
+<p>Attribution matters here: the non-rotating coefficient corresponds to 7.7 √p<sub>t</sub> knots, a figure from the <strong>Transport Canada AIP, as quoted in Transportation Safety Board of Canada report A02C0072</strong> — it is <em>not</em> from NASA TN D-2056 alone, and this page cites it that way.</p>
+
+<h3>(f) Reynolds number and the squeeze-film problem</h3>
+<p class="takeaway"><strong>Takeaway:</strong> over the patch, inertia rules so Bernoulli works — but a thin film also has to be squeezed out in ~6 ms, and viscosity can stop that.</p>
+<div class="eq">Re = ρ V L / μ &nbsp;&nbsp;·&nbsp;&nbsp; μ = 1.002 × 10⁻³ Pa·s at 20 °C · 1.307 × 10⁻³ Pa·s at 10 °C</div>
+<ul>
+<li><strong>At 100 km/h:</strong> Re<sub>h</sub> = <strong>8.3 × 10⁴</strong> for a film of h = 3 mm, and Re<sub>patch</sub> = <strong>4.15 × 10⁶</strong> for L = L<sub>patch</sub> = 0.15 m. Over the patch, inertia dominates and viscosity is negligible — which is why the inviscid Bernoulli step in (b) works for the wedge.</li>
+<li><strong>At 90 km/h (25 m/s):</strong> Re<sub>h</sub> = <strong>7.5 × 10⁴</strong> and Re<sub>patch</sub> = <strong>3.7 × 10⁶</strong>.</li>
+<li><strong>Temperature note:</strong> at 10 °C, use ρ = 999.7 kg/m³ — a difference of only 0.17% from 998 kg/m³. Temperature reaches these results only through μ in the Reynolds numbers, which is why it is not a calculator input.</li>
+</ul>
+<p><strong>Squeeze film:</strong> in the thin-film regime the mechanism is not wedge pressure but time. A patch of tyre passes any point on the road in a contact time of about L<sub>patch</sub>/V — roughly 6 ms at 25 m/s. The water film must be squeezed out sideways within that time. Viscosity resists that squeezing, so on smooth surfaces a thin film can survive the pass and separate tyre from road even when the wedge calculation looks comfortable.</p>
+
+<h3>(g) Tread and getting water out</h3>
+<p class="takeaway"><strong>Takeaway:</strong> each tyre must clear up to ~17 litres of water per second; tread grooves are the escape route, and once water is deeper than the tread they can't help.</p>
+<p>A tyre of width b meeting a film of depth h at speed V encounters water at a volume rate given by continuity:</p>
+<div class="eq">Q<sub>w</sub> = V · b · h &nbsp;&nbsp;(b = 0.205 m — an upper bound only)</div>
+<p>It is an <em>upper bound</em> because some water escapes sideways around the tyre rather than passing under it. Even so, the numbers are startling: <strong>17.1 L/s per tyre</strong> at 100 km/h with h = 3 mm; <strong>15.4 L/s per tyre</strong> at 90 km/h with h = 3 mm; and <strong>25.6 L/s per tyre</strong> at h = 5 mm and 25 m/s. Tread grooves are the escape channels for that flow. Tread depth enters this tool as a <strong>warning only</strong>: when h exceeds tread depth, the grooves are completely submerged and cannot add drainage capacity — the calculator warns in exactly that case, and tread feeds no onset equation.</p>
+
+<h3>(h) Thin films and PAVDRN</h3>
+<p class="takeaway"><strong>Takeaway:</strong> on thin films (under 2.4 mm) the PAVDRN model can predict a lower onset than NASA — the lower valid limit is the one that counts.</p>
+<p>The Florida DOT PAVDRN model's thin-film branch predicts a hydroplaning speed from water-film thickness WFT alone:</p>
+<div class="eq">HPS = 26.04 · WFT<sup>−0.259</sup> &nbsp;mph &nbsp;&nbsp;(WFT in inches)</div>
+<table><tr><th>Film h</th><th>PAVDRN speed</th></tr>
+<tr><td>0.5 mm</td><td>115.9 km/h</td></tr><tr><td>1.0 mm</td><td>96.9 km/h</td></tr><tr><td>2.0 mm</td><td>80.9 km/h</td></tr><tr><td>2.4 mm</td><td>77.2 km/h</td></tr></table>
+<p>Rules followed strictly: this branch is valid <strong>only for h &lt; 2.4 mm</strong>. It is <strong>not used above 2.4 mm and is never extrapolated</strong>. Why not? PAVDRN's high-film branch would give 100.7 km/h at 2.4 mm — a discontinuity of about <strong>23 km/h</strong> at the same depth. That jump is the reason the high branch is not used here. Where the thin-film branch is valid, the <strong>controlling speed = min(selected NASA speed, PAVDRN)</strong>. NASA and PAVDRN are separate empirical fits with different tyre and pavement bases; neither is "the truth," and the lower valid estimate controls.</p>
+
+<h3>(i) The three types compared</h3>
+<p class="takeaway"><strong>Takeaway:</strong> same outcome — water between tyre and road — by three different mechanisms: wedge pressure, squeeze-film, or steam from a locked wheel.</p>
+<p>Dynamic hydroplaning is the main story above. The other two types are variants of the same story — water surviving between tyre and road — with a different mechanism doing the work:</p>
+<table><tr><th>Type</th><th>Mechanism</th><th>When</th></tr>
+<tr><td><strong>Dynamic</strong></td><td>Inertial wedge pressure (the model above)</td><td>Deeper water, higher speed; onset scales as √(p<sub>t</sub>)</td></tr>
+<tr><td><strong>Viscous</strong></td><td>Squeeze-film survival on smooth pavement / smooth tyres</td><td>Thin films; <strong>can occur at lower speeds than dynamic</strong> hydroplaning</td></tr>
+<tr><td><strong>Reverted rubber</strong></td><td>A locked wheel's friction boils the film; steam lifts the tyre and the rubber reverts (softens/melts)</td><td>Locked-wheel braking on wet pavement — mainly an aviation concern</td></tr></table>
+
+<h3>(j) Limits — what the models cannot do</h3>
+<p class="takeaway"><strong>Takeaway:</strong> every number here is an estimate from a specific model — useful for understanding and comparing, never a guarantee for a real tyre on a real road.</p>
+<ul>
+<li>NASA's formula is an <em>onset estimate</em> from 1960s test tyres, valid when water depth exceeds tread drainage capacity. Real onset varies with tread pattern, pavement texture, load, and tyre construction.</li>
+<li>The lift-balance derivation assumes the wedge stagnates fully and that load ≈ p<sub>t</sub>·S. Both are approximations; C<sub>Lh</sub> absorbs their error, which is exactly why it is empirical.</li>
+<li>The <strong>Gallaway model</strong> (FHWA-RD-79-31) was consulted and <strong>not used</strong> in the calculator: the published forms consulted disagree on the water-film term. It is mentioned here only, as a consulted source — it appears nowhere in the calculator itself.</li>
+<li>PAVDRN's thin-film branch says nothing at or above 2.4 mm, and neither NASA formula uses film depth or tread depth at all. A result below onset for the selected model says nothing about thin-film risk on a smooth surface.</li>
+<li>Nothing on this page is a driving recommendation. The statuses in the calculator describe position relative to an estimated onset, nothing more.</li>
+</ul>
+</section>
+
+<section id="calculator">
+<h2>Calculator</h2>
+<p class="calc-intro">Drag any slider — the answers and the chart beside the sliders update as you move, not when you let go. <strong>p<sub>t</sub> is gauge pressure</strong> throughout. Water properties are fixed at 20 °C (ρ = 998 kg/m³, μ = 1.002 × 10⁻³ Pa·s). SI is primary; the toggle only changes the units shown.</p>
+
+<div class="card">
+<div class="quad-grid">
+<div class="quad quad-controls">
+<div class="seg" role="group" aria-label="Unit system">
+<button id="btnSI" aria-pressed="true">SI — kPa · km/h · mm</button>
+<button id="btnUS" aria-pressed="false">US — psi · mph · in</button>
+</div>
+<label for="pt">Tyre pressure p<sub>t</sub> (gauge) <span class="val" id="ptVal"></span></label>
+<input type="range" id="pt" min="180" max="280" step="1" value="220">
+<label for="spd">Driving speed V <span class="val" id="spdVal"></span></label>
+<input type="range" id="spd" min="0" max="140" step="1" value="100">
+<label for="film">Water-film depth h <span class="val" id="filmVal"></span></label>
+<input type="range" id="film" min="0.5" max="10" step="0.1" value="3">
+<label for="tread">Tread depth <span class="val" id="treadVal"></span></label>
+<input type="range" id="tread" min="1.6" max="8" step="0.1" value="8">
+<div class="seg" role="group" aria-label="Tread presets">
+<button data-tread="8">New · 8 mm</button><button data-tread="4">Half-worn · 4 mm</button><button data-tread="1.6">Legal limit · 1.6 mm</button>
+</div>
+<label>Tyre state</label>
+<div class="seg" role="group" aria-label="Tyre state">
+<button id="stRoll" aria-pressed="true">Rolling · C<sub>Lh</sub> = 0.7</button>
+<button id="stNon" aria-pressed="false">Non-rotating · C<sub>Lh</sub> = 0.95</button>
+</div>
+</div>
+
+<div class="quad quad-numbers">
+<div class="num-head"><span id="statusBox" class="status-pill ok" role="status"></span><p class="status-detail" id="statusDetail"></p></div>
+<div class="bigouts">
+<div class="bigout"><div class="cap">Speed where hydroplaning starts — NASA estimate for your tyre state</div><div class="num" id="oCrit">—</div></div>
+<div class="bigout"><div class="cap">How far you are from that speed</div><div class="num" id="oMarginBig">—</div></div>
+<div class="bigout"><div class="cap">Lowest speed limit that applies</div><div class="num" id="oCtrl">—</div></div>
+<div class="bigout"><div class="cap">Water lift pressure at your speed</div><div class="num" id="oLiftBig">—</div><div class="small" id="oLiftSub"></div></div>
+</div>
+<p class="ctrl-line" id="oCtrlSrc"></p>
+<div id="treadWarn" class="warnbox" hidden>⚠ <strong>Water deeper than tread:</strong> grooves are fully submerged — drainage can no longer help.</div>
+</div>
+
+<div class="quad quad-chart">
+<div class="chart-box">
+<p class="chart-title">Lift pressure vs speed — hydroplaning starts where the lift line crosses your tyre pressure</p>
+<p class="chart-explain">Every slider moves something here: pressure moves the dashed line, speed moves the black marker, tyre state swaps the lift line, film depth moves the PAVDRN marker.</p>
+<svg id="chart" viewBox="0 0 720 224" role="img" aria-label="Chart of dynamic pressure and lift pressure versus speed, updating live with the calculator sliders"></svg>
+<div id="chartTreadWarn" class="warnbox chart-warn" hidden>⚠ <strong>Water deeper than tread:</strong> the film is deeper than your tread depth, so the grooves are fully submerged and can't drain — watch this badge while you move the film and tread sliders.</div>
+<p class="chart-note" id="chartPavNote"></p>
+</div>
+</div>
+
+<div class="quad quad-viz">
+<div class="viz" aria-hidden="true">
+<p class="viz-cap" id="vizCap">Live view — wedge, water film, and tyre</p>
+<svg viewBox="0 0 640 170" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="132" width="640" height="8" fill="#8a94a6"/>
+<rect id="vizWater" x="0" y="124" width="640" height="8" fill="#2f7fc4" opacity="0.75"/>
+<path id="vizWedge" d="M 90 132 L 330 132 L 330 122 L 150 128 Z" fill="#2f7fc4" opacity="0.9"/>
+<g id="vizTyre">
+<circle cx="370" cy="86" r="46" fill="none" stroke="currentColor" stroke-width="10"/>
+<circle cx="370" cy="86" r="15" fill="none" stroke="currentColor" stroke-width="5"/>
+</g>
+<text id="vizSpeed" x="16" y="28" font-size="15" font-weight="700" fill="currentColor">100 km/h</text>
+<text id="vizLift" x="470" y="28" font-size="13" fill="#c25e1a" font-weight="700"></text>
+</svg>
+</div>
+</div>
+</div>
+
+<div class="calc-extra">
+<div class="grid">
+<div><div class="outlabel">Dynamic pressure q — from speed alone</div><div class="out" id="oQ"></div></div>
+<div><div class="outlabel">Lift pressure — the share of q that lifts</div><div class="out" id="oLift"></div></div>
+<div><div class="outlabel">Onset if rolling — NASA</div><div class="out" id="oNasaR"></div></div>
+<div><div class="outlabel">Onset if non-rotating — NASA / Transport Canada</div><div class="out" id="oNasaN"></div></div>
+<div><div class="outlabel">Onset from the lift balance — Bernoulli check</div><div class="out" id="oBal"></div></div>
+<div><div class="outlabel">Margin — onset speed minus your speed</div><div class="out" id="oMargin"></div></div>
+<div><div class="outlabel">Re<sub>h</sub> (film, L = h)</div><div class="out" id="oReH"></div></div>
+<div><div class="outlabel">Re<sub>patch</sub> (L = 0.15 m)</div><div class="out" id="oReP"></div></div>
+</div>
+<div id="pavPanel" class="note" hidden></div>
+<p class="small"><strong>Water to clear (upper bound):</strong> Q<sub>w</sub> = V·b·h = <span id="oQw" style="font-family:'JetBrains Mono',monospace"></span> per tyre. An upper bound — some water escapes sideways.</p>
+</div>
+</div>
+</section>
+
+<section id="examples">
+<h2>Worked examples</h2>
+<div class="card"><h3 style="margin-top:0">Example 1 — A typical car at 100 km/h</h3>
+<p>p<sub>t</sub> = 220 kPa, h = 3 mm, V = 100 km/h. NASA rolling V<sub>p</sub> ≈ <strong>94 km/h</strong> — the car is already above it. Check with Bernoulli: q = 385 kPa; lift pressure = 0.7 × 385 ≈ <strong>270 kPa &gt; p<sub>t</sub> = 220 kPa</strong>. Both methods agree the tyre is lifted. PAVDRN does not apply (h = 3 mm ≥ 2.4 mm).</p></div>
+<div class="card"><h3 style="margin-top:0">Example 2 — The underinflated tyre</h3>
+<p>Same car, tyre neglected down to p<sub>t</sub> = 180 kPa. NASA rolling V<sub>p</sub> ≈ <strong>85 km/h</strong> — about <strong>9 km/h lost from 40 kPa of underinflation</strong>. Because onset scales as √(p<sub>t</sub>), an 18% pressure loss costs about 9% of onset speed. Checking tyre pressure is the cheapest hydroplaning countermeasure there is.</p></div>
+<div class="card"><h3 style="margin-top:0">Example 3 — A thin film, where PAVDRN controls</h3>
+<p>p<sub>t</sub> = 220 kPa, h = 2 mm. NASA rolling gives <strong>94.3 km/h</strong>. PAVDRN (valid, since h &lt; 2.4 mm) gives <strong>80.9 km/h</strong>. The controlling speed is min(94.3, 80.9) = <strong>80.9 km/h, from PAVDRN</strong>.</p>
+<p><strong>What does <em>not</em> follow:</strong> no tread conclusion can be drawn from that comparison — PAVDRN has no tread input, so the 94.3 vs 80.9 gap is a difference between two empirical models, not a tread effect. Tread is discussed only via the h &gt; tread-depth warning in the calculator.</p></div>
+</section>
+
+<section id="references">
+<h2>References</h2>
+<ol>
+<li>Horne, W. B. (1963). <em>Phenomena of Pneumatic Tire Hydroplaning.</em> NASA Technical Note D-2056.</li>
+<li>van Es, G. W. H. (2001). <em>Hydroplaning of modern aircraft tires.</em> NLR-TP-2001-242, National Aerospace Laboratory NLR.</li>
+<li>Gallaway, B. M. et al. (1979). <em>Pavement and Geometric Design Criteria for Proper Cure of Hydroplaning on High-Speed Roads.</em> FHWA-RD-79-31. — Consulted, not used in the calculator (see Theory (j)).</li>
+<li>Lee, H. &amp; Ayyala, D. (2020). PAVDRN / hydroplaning-speed research for the Florida Department of Transportation, Report BE570.</li>
+<li>Transport Canada, <em>Aeronautical Information Publication (AIP)</em> — non-rotating-wheel aquaplaning speed, as quoted in Transportation Safety Board of Canada Aviation Investigation Report A02C0072.</li>
+<li>Atkins / SNC-Lavalin (2023). Discussion of the PAVDRN hydroplaning-speed discontinuity at the thin-film branch limit.</li>
+<li>SKYbrary. <em>Aquaplaning</em> — overview of dynamic, viscous, and reverted-rubber aquaplaning.</li>
+</ol>
+</section>
+
+<section id="about" class="about">
+<h2>About this site</h2>
+<p>This section holds the documentation for how the site was made. The tool above stands on its own; everything below is provenance.</p>
+<h3>How it was built — a two-model process</h3>
+<p>Two AI models were used. <strong>Muse Spark 1.3</strong> (Muse) drafted the plan and built this website. <strong>Claude Sonnet 5.5</strong> (<span style="font-family:'JetBrains Mono',monospace">claude-sonnet-5-5</span>) independently critiqued the plan — recomputing the numbers rather than taking them on trust — and later built an independent calculator implementation from the formulas and inputs only, with no expected answers shown to it. The two calculator implementations were then compared on the same test cases.</p>
+<p>Attribution: physics and sources are as cited in References. Text, code, and diagrams were produced with the two models named above, under the direction of the site author, who verified the key claims against the primary sources (NASA TN D-2056, the FDOT PAVDRN report, and TSB A02C0072) before accepting them.</p>
+<h3>Accept / reject log for the critique</h3>
+<table><tr><th>#</th><th>Critique point</th><th>Decision</th><th>Reason</th></tr>
+<tr><td>1</td><td>“Agreement within 4%” between lift-balance and NASA is not independent — both scale as √p<sub>t</sub>; C<sub>Lh</sub> was effectively fitted</td><td><strong>Accept</strong></td><td>Correct. The site states the scaling is derived and C<sub>Lh</sub> is empirical (≈0.64/0.88 implied by NASA; 0.7/0.95 in van Es)</td></tr>
+<tr><td>2</td><td>Worked Example 3 drew a tread conclusion PAVDRN cannot support; NASA-vs-PAVDRN relationship unexplained; check the 2.4 mm branch</td><td><strong>Accept</strong></td><td>Verified in the FDOT report: cutoff and discontinuity are real (77.2 vs 100.7 km/h at 2.4 mm). Example rewritten; controlling speed = min of valid models</td></tr>
+<tr><td>3</td><td>Tread depth and water temperature affect no output; status thresholds undefined; onset wording must stay estimate-relative</td><td><strong>Accept</strong></td><td>Tread is warning-only (h &gt; tread); temperature cut as an input; statuses defined at a 10 km/h band with onset-relative wording</td></tr>
+<tr><td>4</td><td>“Rolling vs locked” labels need checking against TN D-2056</td><td><strong>Accept in part</strong></td><td>The 7.7-knot figure is real but is Transport Canada AIP via TSB A02C0072, not TN D-2056. Relabelled “non-rotating” and cited correctly</td></tr>
+<tr><td>5</td><td>Symbol clashes: p for both pressures; q vs Q</td><td><strong>Accept</strong></td><td>p<sub>t</sub>, p<sub>∞</sub>, q, Q<sub>w</sub> used throughout; Q<sub>w</sub> labelled an upper bound</td></tr>
+<tr><td>6</td><td>Wording overstatements about viscous hydroplaning; missing Bernoulli assumptions and squeeze-film mechanism</td><td><strong>Accept (edits)</strong></td><td>Softened to “can occur at lower speeds”; assumptions stated once; squeeze-film paragraph added</td></tr>
+<tr><td>7</td><td>Calculator scope too large</td><td><strong>Accept</strong></td><td>Trimmed to one chart, a single SI/US toggle, PAVDRN as a conditional panel, Q<sub>w</sub> as a small extra</td></tr>
+<tr><td>8</td><td>Comparison contamination risk (don't show the second model the expected answers); video caption delay risk</td><td><strong>Accept</strong></td><td>The independent calculator build was given formulas and inputs only, no validation values; practice upload planned unlisted a day early</td></tr>
+<tr><td>9</td><td>Missing process evidence: verbatim prompt, model names, full critique, rubric defined before build, “where the AI was wrong”</td><td><strong>Accept</strong></td><td>This section exists because of this point</td></tr>
+</table>
+<h3>Comparison outcome</h3>
+<p>The independent calculator was checked against the validation cases (NASA at 180/220/240 kPa; q at 60/80/100 km/h; PAVDRN at 1 and 2 mm) — <strong>no numeric errors were found</strong> in either implementation; the two agree numerically. One logic difference surfaced, in Claude's favour: Claude keyed the margin and status to the NASA speed for the <em>selected</em> tyre state, while the first build here always used the rolling speed. <strong>Version kept:</strong> this site, with Claude's selected-state margin and controlling-speed logic adopted into its calculator.</p>
+<h3>Where the AI was wrong</h3>
+<ul>
+<li><strong>Muse (early plan)</strong> presented a 4% theory-vs-NASA agreement as independent validation when the √p<sub>t</sub> scaling made it nearly automatic — a framing error, caught by Claude.</li>
+<li><strong>Muse (early plan)</strong> wrote a worked example concluding tread mattered from a model (PAVDRN) that contains no tread variable — an invalid inference, caught by Claude.</li>
+<li><strong>Muse (early plan)</strong> attributed the 7.7-knot non-rotating coefficient to NASA; it is Transport Canada's figure. Caught by Claude's prompt to check, confirmed by searching TN D-2056.</li>
+<li><strong>Muse (calculator, first build)</strong> computed the margin and status against the NASA <em>rolling</em> onset regardless of the selected tyre state. A non-rotating tyre at 90 km/h with p<sub>t</sub> = 220 kPa would have shown “Below estimated onset” even though it is above the 80.5 km/h non-rotating onset. The comparison caught this; the calculator now uses the selected state, with controlling speed = min(V<sub>p,selected</sub>, PAVDRN where valid).</li>
+<li><strong>Claude</strong> proposed a hysteresis/recovery-speed reading of the two coefficients that the sources do not state as a separate formula; the accepted wording follows the TSB's plainer statement instead. Claude also could not confirm the 2.4 mm PAVDRN cutoff from memory — it had to be verified in the FDOT report, and was real.</li>
+</ul>
+<h3>Video &amp; transcript</h3>
+<p><strong>Video:</strong> not yet uploaded. When the presentation video is live on YouTube, its link will be placed here.</p>
+<p><strong>Verbatim transcript:</strong> placeholder — after upload, the verbatim YouTube auto-generated transcript will be pasted here exactly as YouTube produces it. No transcript text is shown until then, so that nothing here is mistaken for the real one.</p>
+</section>
+
+<footer>Constants: ρ = 998 kg/m³, μ = 1.002 × 10⁻³ Pa·s (water at 20 °C), b = 0.205 m, L<sub>patch</sub> = 0.15 m. Onset figures are estimates from the cited models, not guarantees for any real tyre, road, or conditions.</footer>
+</div>
+
+<script>
+(function(){
+var rho=998, mu=1.002e-3, b=0.205, Lp=0.15;
+var units='SI', state='rolling';
+var $=function(id){return document.getElementById(id)};
+var pt=$('pt'), spd=$('spd'), film=$('film'), tread=$('tread');
+function fmt(n,d){return n.toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d})}
+function sci(n){var e=n.toExponential(1).split('e');return fmt(parseFloat(e[0]),1)+' × 10^'+e[1].replace('+','')}
+function fillTrack(el){var min=parseFloat(el.min),max=parseFloat(el.max),v=parseFloat(el.value);var p=((v-min)/(max-min))*100;el.style.background='linear-gradient(to right, var(--accent) 0%, var(--accent) '+p+'%, var(--line) '+p+'%, var(--line) 100%)';}
+function render(){
+  var P=parseFloat(pt.value), Vkmh=parseFloat(spd.value), h=parseFloat(film.value), tr=parseFloat(tread.value);
+  var V=Vkmh/3.6, CLh=(state==='rolling'?0.7:0.95);
+  [pt,spd,film,tread].forEach(fillTrack);
+  if(units==='SI'){
+    $('ptVal').textContent=fmt(P,0)+' kPa'; $('spdVal').textContent=fmt(Vkmh,0)+' km/h';
+    $('filmVal').textContent=fmt(h,1)+' mm'; $('treadVal').textContent=fmt(tr,1)+' mm';
+  }else{
+    $('ptVal').textContent=fmt(P/6.89476,1)+' psi'; $('spdVal').textContent=fmt(Vkmh/1.60934,1)+' mph';
+    $('filmVal').textContent=fmt(h/25.4,3)+' in'; $('treadVal').textContent=fmt(tr/25.4,3)+' in';
+  }
+  var q=0.5*rho*V*V/1000;
+  var lift=CLh*q;
+  var nasaR=6.36*Math.sqrt(P), nasaN=5.43*Math.sqrt(P);
+  var nasaSel=(state==='rolling'?nasaR:nasaN);
+  var stateName=(state==='rolling'?'rolling':'non-rotating');
+  var bal=Math.sqrt(2*P*1000/(rho*CLh))*3.6;
+  var margin=nasaSel-Vkmh;
+  var ReH=rho*V*(h/1000)/mu, ReP=rho*V*Lp/mu;
+  var Qw=V*b*(h/1000)*1000;
+  function spdOut(kmh){return units==='SI'?fmt(kmh,1)+' km/h':fmt(kmh/1.60934,1)+' mph'}
+  function prOut(kpa){return units==='SI'?fmt(kpa,0)+' kPa':fmt(kpa/6.89476,1)+' psi'}
+  $('oQ').textContent=prOut(q);
+  $('oLift').textContent=prOut(lift);
+  $('oNasaR').textContent=spdOut(nasaR);
+  $('oNasaN').textContent=spdOut(nasaN);
+  $('oBal').textContent=spdOut(bal);
+  var marginTxt=(margin>=0?'+':'')+(units==='SI'?fmt(margin,1)+' km/h':fmt(margin/1.60934,1)+' mph');
+  $('oMargin').textContent=marginTxt;
+  $('oMarginBig').textContent=marginTxt;
+  $('oCrit').textContent=spdOut(nasaSel);
+  $('oReH').textContent=sci(ReH); $('oReP').textContent=sci(ReP);
+  $('oQw').textContent=fmt(Qw,1)+' L/s';
+  $('treadWarn').hidden=!(h>tr);
+  var pavKmh=null;
+  if(h<2.4){ var wft0=h/25.4; pavKmh=26.04*Math.pow(wft0,-0.259)*1.60934; }
+  var ctrl=(pavKmh===null)?nasaSel:Math.min(nasaSel,pavKmh);
+  $('oCtrl').textContent=spdOut(ctrl);
+  if(pavKmh===null){
+    $('oCtrlSrc').innerHTML='<strong>Which limit controls:</strong> the NASA '+stateName+' estimate — the film is 2.4 mm or deeper, so the thin-film PAVDRN model does not apply here.';
+  }else if(pavKmh<nasaSel){
+    $('oCtrlSrc').innerHTML='<strong>Which limit controls:</strong> PAVDRN — on a thin film ('+fmt(h,1)+' mm, under 2.4 mm) it predicts lift-off sooner than NASA, so its lower speed is the one to watch.';
+  }else{
+    $('oCtrlSrc').innerHTML='<strong>Which limit controls:</strong> the NASA '+stateName+' estimate — even on this thin film it is lower than the PAVDRN speed, so it controls.';
+  }
+  $('chartTreadWarn').hidden=!(h>tr);
+  $('chartPavNote').textContent=(pavKmh===null)
+    ? 'Thin-film note: at h = '+fmt(h,1)+' mm the PAVDRN thin-film model does not apply (it is only valid below 2.4 mm), so no PAVDRN marker is shown. Tread depth does not change these curves — it only triggers the warning above when the water is deeper than the tread.'
+    : 'Thin-film note: the blue dotted marker is the PAVDRN onset for h = '+fmt(h,1)+' mm — drag the film slider and watch it move. Tread depth does not change these curves; it only triggers a warning when the water is deeper than the tread.';
+  $('oLiftBig').textContent=prOut(lift);
+  $('oLiftSub').textContent='Tyre pressure is '+prOut(P)+' — lift is '+(lift>=P?'above it, so the lift balance says the tyre is lifted':'below it, so the tyre still carries its load');
+  var sb=$('statusBox'), sd=$('statusDetail');
+  if(margin>10){sb.className='status-pill ok'; sb.textContent='Below estimated onset'; sd.textContent='Driving speed is more than 10 km/h under the NASA '+stateName+' estimate for the selected tyre state ('+spdOut(nasaSel)+').';}
+  else if(margin>0){sb.className='status-pill near'; sb.textContent='Near onset — reduce speed'; sd.textContent='Within 10 km/h of the NASA '+stateName+' estimate for the selected tyre state ('+spdOut(nasaSel)+').';}
+  else{sb.className='status-pill over'; sb.textContent='At or above estimated onset'; sd.textContent='At or past the NASA '+stateName+' estimate for the selected tyre state ('+spdOut(nasaSel)+'). Lift pressure '+(lift>=P?'exceeds':'approaches')+' tyre pressure in the lift-balance check.';}
+  // Live visual: water depth, wedge size, tyre lift, speed label
+  var waterH=4+Math.min(h,10)*1.6;
+  var water=$('vizWater'); water.setAttribute('y',(132-waterH).toFixed(1)); water.setAttribute('height',waterH.toFixed(1));
+  var wedge=$('vizWedge'); var wy=132-waterH-2; wedge.setAttribute('d','M 90 132 L 330 132 L 330 '+wy.toFixed(1)+' L 150 '+(132-waterH*0.4).toFixed(1)+' Z');
+  var liftFrac=Math.max(0,Math.min(1,(lift-P)/160+0.5)); var liftPx=(lift>=P)?Math.min(16,4+(lift-P)/12):0;
+  $('vizTyre').style.transform='translateY('+(-liftPx).toFixed(1)+'px)';
+  $('vizSpeed').textContent=(units==='SI'?fmt(Vkmh,0)+' km/h':fmt(Vkmh/1.60934,1)+' mph');
+  $('vizLift').textContent=lift>=P?'▲ lift exceeds p_t — tyre lifted':'';
+  $('vizCap').textContent='Live view — film '+fmt(h,1)+' mm · wedge grows with speed · '+(lift>=P?'tyre lifted off the road':'tyre in contact');
+  var pp=$('pavPanel');
+  if(pavKmh!==null){
+    pp.hidden=false;
+    pp.innerHTML='<strong>Thin-film panel — PAVDRN applies (h = '+fmt(h,1)+' mm &lt; 2.4 mm).</strong><br>PAVDRN speed: <strong>'+spdOut(pavKmh)+'</strong> · NASA '+stateName+' (selected state): <strong>'+spdOut(nasaSel)+'</strong><br>Controlling speed (min of the two): <strong>'+spdOut(ctrl)+'</strong>, from '+(ctrl===pavKmh?'PAVDRN':'NASA '+stateName)+'. PAVDRN is not extrapolated beyond 2.4 mm.';
+  } else { pp.hidden=true; pp.innerHTML=''; }
+  drawChart(P,Vkmh,CLh,lift,pavKmh,stateName);
+}
+function drawChart(P,Vcur,CLh,liftCur,pavKmh,stateName){
+  var svg=$('chart'), W=720,H=224, L=52,Rt=126,T=20,B=36, iw=W-L-Rt, ih=H-T-B, maxV=140, maxP=800;
+  function X(v){return L+iw*v/maxV} function Y(p){return T+ih-ih*p/maxP}
+  function qAt(v,clh){var ms=v/3.6; return 0.5*rho*ms*ms/1000*clh}
+  var cross=Math.sqrt(2*P*1000/(rho*CLh))*3.6;
+  var s='';
+  // Shaded onset region: where the lift curve sits above p_t (past the crossing)
+  if(cross<maxV){
+    var shade='M'+X(cross).toFixed(1)+' '+Y(P).toFixed(1)+' ';
+    for(var v=cross;v<=maxV;v+=2){shade+='L'+X(v).toFixed(1)+' '+Y(Math.min(qAt(v,CLh),maxP)).toFixed(1)+' ';}
+    shade+='L'+X(maxV).toFixed(1)+' '+Y(P).toFixed(1)+' Z';
+    s+='<path d="'+shade+'" fill="var(--orange)" opacity="0.16"/>';
+    s+='<text x="'+((X(cross)+X(maxV))/2).toFixed(1)+'" y="'+(Y(P)-10)+'" font-size="14" text-anchor="middle" fill="var(--orange)" font-weight="700">lift above p_t — past onset</text>';
+  }
+  // Gridlines and axis ticks (14px minimum)
+  for(var g=0;g<=maxP;g+=200){s+='<line x1="'+L+'" y1="'+Y(g)+'" x2="'+(L+iw)+'" y2="'+Y(g)+'" stroke="var(--line)" stroke-width="1"/><text x="'+(L-8)+'" y="'+(Y(g)+5)+'" font-size="14" text-anchor="end" fill="var(--muted)">'+g+'</text>';}
+  for(var v=0;v<=140;v+=20){s+='<line x1="'+X(v)+'" y1="'+T+'" x2="'+X(v)+'" y2="'+(T+ih)+'" stroke="var(--line)" stroke-width="0.6" opacity="0.6"/><text x="'+X(v)+'" y="'+(H-24)+'" font-size="14" text-anchor="middle" fill="var(--muted)">'+v+'</text>';}
+  s+='<text x="'+(L+iw/2)+'" y="'+(H-6)+'" font-size="14" text-anchor="middle" fill="var(--ink)" font-weight="600">Speed V (km/h)</text>';
+  s+='<text x="18" y="'+(T+ih/2)+'" font-size="14" text-anchor="middle" fill="var(--ink)" font-weight="600" transform="rotate(-90 18 '+(T+ih/2)+')">Pressure (kPa)</text>';
+  // PAVDRN thin-film marker (only when h < 2.4 mm)
+  if(pavKmh!==null&&pavKmh<=maxV){
+    s+='<line x1="'+X(pavKmh)+'" y1="'+T+'" x2="'+X(pavKmh)+'" y2="'+(T+ih)+'" stroke="var(--water)" stroke-width="2.5" stroke-dasharray="2 5"/>';
+    var pavAnchor=pavKmh>92?'end':'start'; var pavX=pavKmh>92?X(pavKmh)-6:X(pavKmh)+6;
+    s+='<text x="'+pavX+'" y="'+(T-8)+'" font-size="14" text-anchor="'+pavAnchor+'" fill="var(--water)" font-weight="700">PAVDRN thin-film onset · '+fmt(pavKmh,1)+' km/h</text>';
+  }
+  // Curves: q dashed grey, lift solid teal — told apart by dash as well as colour
+  function curve(clh,color,width,dash){
+    var d=''; for(var v=0;v<=140;v+=2){var q=Math.min(qAt(v,clh),maxP); d+=(v===0?'M':'L')+X(v).toFixed(1)+' '+Y(q).toFixed(1)+' ';} return '<path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="'+width+'"'+(dash?' stroke-dasharray="'+dash+'"':'')+'/>';
+  }
+  s+=curve(1,'#8a949e',2.5,'6 4');
+  s+=curve(CLh,'var(--accent)',3.5,'');
+  // p_t dashed horizontal line
+  s+='<line x1="'+L+'" y1="'+Y(P)+'" x2="'+(L+iw)+'" y2="'+Y(P)+'" stroke="var(--orange)" stroke-width="2.5" stroke-dasharray="9 5"/>';
+  // Crossing point where lift meets p_t
+  if(cross<=maxV){s+='<circle cx="'+X(cross)+'" cy="'+Y(P)+'" r="6" fill="var(--surface)" stroke="var(--orange)" stroke-width="3"/>';}
+  // Current-speed marker: vertical line, dot on the lift curve, plain label
+  if(Vcur>0&&Vcur<=maxV){
+    s+='<line x1="'+X(Vcur)+'" y1="'+T+'" x2="'+X(Vcur)+'" y2="'+(T+ih)+'" stroke="var(--ink)" stroke-width="2"/>';
+    s+='<circle cx="'+X(Vcur)+'" cy="'+Y(Math.min(liftCur,maxP))+'" r="7" fill="var(--accent)" stroke="var(--surface)" stroke-width="2.5"/>';
+    var youAnchor=Vcur>84?'end':'start'; var youX=Vcur>84?X(Vcur)-10:X(Vcur)+10;
+    var youY=Math.max(T+16,Y(Math.min(liftCur,maxP))-14);
+    s+='<text x="'+youX+'" y="'+youY+'" font-size="14" text-anchor="'+youAnchor+'" fill="var(--ink)" font-weight="700">You: '+fmt(Vcur,0)+' km/h · lift '+fmt(liftCur,0)+' kPa — '+(liftCur>=P?'above':'below')+' p_t</text>';
+  }
+  // Direct end-of-line labels (right margin, stacked so they never overlap)
+  var qEndY=Y(Math.min(qAt(140,1),maxP)), liftEndY=Y(Math.min(qAt(140,CLh),maxP));
+  s+='<text x="'+(L+iw+8)+'" y="'+(qEndY+5)+'" font-size="14" fill="#8a949e" font-weight="700">q (dashed)</text>';
+  s+='<text x="'+(L+iw+8)+'" y="'+(liftEndY+24)+'" font-size="14" fill="var(--accent)" font-weight="700">lift (solid)</text>';
+  s+='<text x="'+(L+iw+8)+'" y="'+(liftEndY+44)+'" font-size="14" fill="var(--accent)">'+stateName+'</text>';
+  s+='<text x="'+(L+iw+8)+'" y="'+(liftEndY+64)+'" font-size="14" fill="var(--accent)">C_Lh = '+CLh+'</text>';
+  s+='<text x="'+(L+iw+8)+'" y="'+(Y(P)+5)+'" font-size="14" fill="var(--orange)" font-weight="700">p_t = '+fmt(P,0)+' kPa</text>';
+  svg.innerHTML=s;
+}
+[pt,spd,film,tread].forEach(function(el){el.addEventListener('input',render)});
+document.querySelectorAll('[data-tread]').forEach(function(btn){btn.addEventListener('click',function(){tread.value=btn.getAttribute('data-tread');render()})});
+$('btnSI').addEventListener('click',function(){units='SI';this.setAttribute('aria-pressed','true');$('btnUS').setAttribute('aria-pressed','false');render()});
+$('btnUS').addEventListener('click',function(){units='US';this.setAttribute('aria-pressed','true');$('btnSI').setAttribute('aria-pressed','false');render()});
+$('stRoll').addEventListener('click',function(){state='rolling';this.setAttribute('aria-pressed','true');$('stNon').setAttribute('aria-pressed','false');render()});
+$('stNon').addEventListener('click',function(){state='nonrotating';this.setAttribute('aria-pressed','true');$('stRoll').setAttribute('aria-pressed','false');render()});
+render();
+})();
+</script>
+</body>
+</html>
